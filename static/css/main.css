@@ -1,0 +1,83 @@
+.main-container {
+  display: flex;
+  padding: 15px;
+  width: 100%;
+}
+
+.loading {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.sidebar {
+  width: 30%;
+  border-right: 1px solid #eee;
+}
+
+.content-container {
+  display: flex
+}
+
+.label-div {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: right;
+  margin-right: 15px;
+}
+
+.img-container {
+  height: 100px;
+}
+
+.content-detail {
+  width: 80%;
+  line-height: 3.1;
+}
+
+.dim-color {
+  color: #b4b8b9;
+}
+
+.name-tag {
+  margin-right: 5px;
+    color: #fff;
+    background: darkgrey;
+    border-radius: 100%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.record-alpha {
+  background-color: #ddd;
+  padding: 5px;
+}
+.records-list{
+  padding: 15px 0;
+  border: 1px solid #eee;
+  border-right: none;
+}
+
+.record-title {
+  padding: 5px 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.active {
+  background-color: #e8f5eb;
+}

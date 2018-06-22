@@ -10,8 +10,8 @@ export default class Records extends React.Component {
       records: [],
       record: {},
       loading: true,
-      sortedBy: '',
-      sortOrder: 'desc'
+      serverError: false,
+      fetching: false,
     };
   }
 
@@ -45,15 +45,26 @@ export default class Records extends React.Component {
         this.setState({
           recordKeys: keys || [],
           records: res.data.records,
-          record: get(res.data, `records.${keys[0]}.0`) || {}
+          loading: false
+        }, () => {
+          if (get(res.data, `records.${keys[0]}.0`)) {
+            this.getRecord(get(res.data, `records.${keys[0]}.0`));
+          }
         })
       })
       .catch(err => {
         console.error(err)
+        this.setState({
+          loading: false,
+          serverError: true
+        })
       })
   }
 
   getRecord = (record) => {
+    this.setState({
+      fetching: true
+    })
     let criteria = {
       id: record.id,
       is_organization: record.organization_id ? true : false
@@ -62,6 +73,7 @@ export default class Records extends React.Component {
       .then(res => {
         console.log('single record', res);
         this.setState({
+          fetching: false,
           record: res.data.record
         })
       })
@@ -72,25 +84,33 @@ export default class Records extends React.Component {
 
   render() {
     console.log(this.state);
+    if (this.state.loading) {
+      return <div className='loading'>Fetching data...</div>
+    } else if (this.state.serverError) {
+      return <div className='loading' style={{color: 'red'}}>Server error...</div>
+    }
     return (
-      <div>
-        <div>
+      <div className='main-container'>
+        <div className='sidebar'>
           {this.state.recordKeys.map((recordKey, index) => {
             let records = get(this.state.records, `${recordKey}`) || []; 
             return <div key={index}>
-              <div>
+              <div className='record-alpha'>
                 {recordKey}
               </div>
               {records.map(record => {
-                return <div key={record.id}>
-                  <div onClick={() => this.getRecord(record)}>{record.description || ''}</div>
+                return <div key={record.id} className='records-list'>
+                  <div className={ this.state.record.id === record.id ? 'active' : ''} style={{display: 'flex',}}>
+                    <div><img src={record.image} className='record-list-img' style={{height:'32px', width: '32px', marginRight: '8px'}}/></div>
+                    <div onClick={() => this.getRecord(record)} className='record-title'>{record.description || ''}</div>
+                  </div>
                 </div>
               })}            
             </div>
           })}
         </div>
-        <div>
-          <RecordDetail record={this.state.record || {}}/>
+        <div className='content-detail'>
+          <RecordDetail record={this.state.record || {}} fetching={this.state.fetching} />
         </div>
       </div>
     );
