@@ -12,6 +12,7 @@ export default class Records extends React.Component {
       loading: true,
       serverError: false,
       fetching: false,
+      tokenError: false
     };
   }
 
@@ -22,8 +23,7 @@ export default class Records extends React.Component {
 
   getToken = () => {
     let token = sessionStorage.getItem("session_token");
-    console.log('token s', token);
-    if (!token) {
+       
       TeamsService.getToken()
         .then(res => {
           console.log('get token', res);
@@ -32,8 +32,7 @@ export default class Records extends React.Component {
         .catch(err => {
           console.error(err)
         })
-    }
-    return;
+    
   }
 
   getAllRecords = () => {
@@ -56,7 +55,8 @@ export default class Records extends React.Component {
         console.error(err)
         this.setState({
           loading: false,
-          serverError: true
+          serverError: true,
+          tokenError: false
         })
       })
   }
@@ -72,13 +72,26 @@ export default class Records extends React.Component {
     TeamsService.getRecord(criteria)
       .then(res => {
         console.log('single record', res);
-        this.setState({
-          fetching: false,
-          record: res.data.record
-        })
+        if (res.data.status !== 'error') {
+          this.setState({
+            fetching: false,
+            record: res.data.record,
+            loading: false,
+            serverError: false,
+            tokenError: false,
+          })
+        } else {
+          this.setState({
+            loading: false,
+            serverError: false,
+            tokenError: true,
+            fetching: false
+          })
+          throw 'TOKEN_ERROR'
+        }
       })
       .catch(err => {
-        console.error(err)
+        console.error('TOKEN', err)
       })
   }
 
@@ -110,7 +123,7 @@ export default class Records extends React.Component {
           })}
         </div>
         <div className='content-detail'>
-          <RecordDetail record={this.state.record || {}} fetching={this.state.fetching} />
+          <RecordDetail record={this.state.record || {}} fetching={this.state.fetching} tokenError={this.state.tokenError}/>
         </div>
       </div>
     );

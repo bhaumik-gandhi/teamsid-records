@@ -19,11 +19,14 @@ export default class RecordDetail extends React.Component {
   render() {
     let record = this.props.record || {};
     let fetching = this.props.fetching;
+    let tokenError = this.props.tokenError || false;
 
     console.log("RECORD", record);
     
     if (fetching) {
       return <div className='loading'>Fetching data...</div>
+    } else if (tokenError) {
+      return <div className='loading'>Not Authorized</div>
     }
 
     return <div className='content-container'>
