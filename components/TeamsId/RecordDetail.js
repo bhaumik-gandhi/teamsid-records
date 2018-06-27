@@ -5,7 +5,7 @@ export default class RecordDetail extends React.Component {
 
   getValueFromLabel = (details = [], label) => {
 
-    if (!details.length) {
+    if (!details || !details.length) {
       return '-';
     }
 
