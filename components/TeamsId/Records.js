@@ -23,7 +23,7 @@ export default class Records extends React.Component {
 
   getToken = () => {
     let token = sessionStorage.getItem("session_token");
-       
+       console.log(token);
       TeamsService.getToken()
         .then(res => {
           console.log('get token', res);
@@ -44,7 +44,8 @@ export default class Records extends React.Component {
         this.setState({
           recordKeys: keys || [],
           records: res.data.records,
-          loading: false
+          loading: false,
+          fetching: true
         }, () => {
           if (get(res.data, `records.${keys[0]}.0`)) {
             this.getRecord(get(res.data, `records.${keys[0]}.0`));
