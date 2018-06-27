@@ -9,7 +9,10 @@ export default class RecordDetail extends React.Component {
       return '-';
     }
 
-    let obj = details.find(d => d.label === label);
+    let obj = details.find(d => d.label === label) || null;
+    if (!obj) {
+      return '-';
+    }
     if (label === 'Password') {
       return (Array(obj.value.length + 1)).join('*');
     }
